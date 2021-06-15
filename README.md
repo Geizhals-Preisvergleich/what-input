@@ -1,3 +1,4 @@
+This is the Geizhals version of _What Input_, which does NOT feature `data-whatelement` and `data-whatclasses` attributes. 
 # What Input?
 
 **A global utility for tracking the current input method (mouse, keyboard or touch).**
