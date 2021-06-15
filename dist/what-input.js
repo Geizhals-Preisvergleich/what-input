@@ -76,11 +76,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return 'initial';
 	      },
 
-	      // always return null
-	      element: function element() {
-	        return null;
-	      },
-
 	      // no-op
 	      ignoreKeys: function ignoreKeys() {},
 
@@ -101,9 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // cache document.documentElement
 	  var docElem = document.documentElement;
-
-	  // currently focused dom element
-	  var currentElement = null;
 
 	  // last used input type
 	  var currentInput = 'initial';
@@ -225,9 +217,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    window.addEventListener('keydown', setInput);
 	    window.addEventListener('keyup', setInput);
 
-	    // focus events
-	    window.addEventListener('focusin', setElement);
-	    window.addEventListener('focusout', clearElement);
 	  };
 
 	  // checks if input persistence should happen and
@@ -321,29 +310,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      persistInput('intent', currentIntent);
 	      doUpdate('intent');
 	    }
-	  };
-
-	  var setElement = function setElement(event) {
-	    if (!event.target.nodeName) {
-	      // If nodeName is undefined, clear the element
-	      // This can happen if click inside an <svg> element.
-	      clearElement();
-	      return;
-	    }
-
-	    currentElement = event.target.nodeName.toLowerCase();
-	    docElem.setAttribute('data-whatelement', currentElement);
-
-	    if (event.target.classList && event.target.classList.length) {
-	      docElem.setAttribute('data-whatclasses', event.target.classList.toString().replace(' ', ','));
-	    }
-	  };
-
-	  var clearElement = function clearElement() {
-	    currentElement = null;
-
-	    docElem.removeAttribute('data-whatelement');
-	    docElem.removeAttribute('data-whatclasses');
 	  };
 
 	  var persistInput = function persistInput(which, value) {
@@ -470,11 +436,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // 'intent': includes `data-whatintent` value if it's different than `data-whatinput`
 	    ask: function ask(opt) {
 	      return opt === 'intent' ? currentIntent : currentInput;
-	    },
-
-	    // returns string: the currently focused element or null
-	    element: function element() {
-	      return currentElement;
 	    },
 
 	    // overwrites ignored keys with provided array

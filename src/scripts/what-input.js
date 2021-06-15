@@ -10,9 +10,6 @@ module.exports = (() => {
       // always return "initial" because no interaction will ever be detected
       ask: () => 'initial',
 
-      // always return null
-      element: () => null,
-
       // no-op
       ignoreKeys: () => {},
 
@@ -33,9 +30,6 @@ module.exports = (() => {
 
   // cache document.documentElement
   const docElem = document.documentElement
-
-  // currently focused dom element
-  let currentElement = null
 
   // last used input type
   let currentInput = 'initial'
@@ -161,9 +155,6 @@ module.exports = (() => {
     window.addEventListener('keydown', setInput)
     window.addEventListener('keyup', setInput)
 
-    // focus events
-    window.addEventListener('focusin', setElement)
-    window.addEventListener('focusout', clearElement)
   }
 
   // checks if input persistence should happen and
@@ -279,32 +270,6 @@ module.exports = (() => {
       persistInput('intent', currentIntent)
       doUpdate('intent')
     }
-  }
-
-  const setElement = event => {
-    if (!event.target.nodeName) {
-      // If nodeName is undefined, clear the element
-      // This can happen if click inside an <svg> element.
-      clearElement()
-      return
-    }
-
-    currentElement = event.target.nodeName.toLowerCase()
-    docElem.setAttribute('data-whatelement', currentElement)
-
-    if (event.target.classList && event.target.classList.length) {
-      docElem.setAttribute(
-        'data-whatclasses',
-        event.target.classList.toString().replace(' ', ',')
-      )
-    }
-  }
-
-  const clearElement = () => {
-    currentElement = null
-
-    docElem.removeAttribute('data-whatelement')
-    docElem.removeAttribute('data-whatclasses')
   }
 
   const persistInput = (which, value) => {
@@ -440,11 +405,6 @@ module.exports = (() => {
     // 'intent': includes `data-whatintent` value if it's different than `data-whatinput`
     ask: opt => {
       return opt === 'intent' ? currentIntent : currentInput
-    },
-
-    // returns string: the currently focused element or null
-    element: () => {
-      return currentElement
     },
 
     // overwrites ignored keys with provided array
